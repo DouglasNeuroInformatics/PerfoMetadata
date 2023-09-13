@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
-import { Table, type TableColumn } from '@douglasneuroinformatics/ui';
+import { Table, type TableColumn, LanguageToggle } from '@douglasneuroinformatics/ui';
+import { useTranslation } from 'react-i18next';
 
 import { Button } from './components/Button';
 
@@ -12,7 +13,7 @@ type DataRecord = {
 export const App = () => {
   const [count, setCount] = useState(0);
   const [data, setData] = useState<DataRecord[]>([]);
-
+  const { t } = useTranslation();
   async function fetchData() {
     const response = await fetch('/data.json');
     if (!response.ok) {
@@ -34,13 +35,15 @@ export const App = () => {
     return <p>Loading...</p>;
   }
 
-  const columns: TableColumn<DataRecord>[] = Object.keys(data[0]).map((columnName) => ({
+  const columns: TableColumn<DataRecord>[] = Object.keys(data[0]!).map((columnName) => ({
     label: columnName,
     field: columnName
   }));
 
   return (
-    <div>
+    <div className="container">
+      <h1>{t('title')}</h1>
+      <LanguageToggle options={['en', 'fr']} />
       <Table columns={columns} data={data} />
       <p>The count is {count}</p>
       <Button
