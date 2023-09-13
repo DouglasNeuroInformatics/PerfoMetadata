@@ -1,15 +1,55 @@
-import { Button } from "./components/Button"
+import { useEffect, useState } from 'react';
+
+import { Table, type TableColumn } from '@douglasneuroinformatics/ui';
+
+import { Button } from './components/Button';
+
+// eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
+type DataRecord = {
+  [key: string]: string | null;
+};
 
 export const App = () => {
+  const [count, setCount] = useState(0);
+  const [data, setData] = useState<DataRecord[]>([]);
 
-  function refreshData() {
-    alert('Refresh')
+  async function fetchData() {
+    const response = await fetch('/data.json');
+    if (!response.ok) {
+      console.error('Error: status code ' + response.status);
+      return;
+    }
+    const jsonData = (await response.json()) as DataRecord[];
+    setCount(count + 1);
+    setData(jsonData);
   }
+
+  useEffect(() => {
+    setTimeout(() => {
+      void fetchData();
+    }, 2000);
+  }, []);
+
+  if (data.length === 0) {
+    return <p>Loading...</p>;
+  }
+
+  const columns: TableColumn<DataRecord>[] = Object.keys(data[0]).map((columnName) => ({
+    label: columnName,
+    field: columnName
+  }));
 
   return (
     <div>
-      <h1>Perfocentre Metadata</h1>
-      <Button onClick={refreshData}>Click to Refresh</Button>
+      <Table columns={columns} data={data} />
+      <p>The count is {count}</p>
+      <Button
+        onClick={() => {
+          void fetchData();
+        }}
+      >
+        Fetch Data
+      </Button>
     </div>
-  )
-}
+  );
+};
