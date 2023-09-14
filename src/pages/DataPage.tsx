@@ -3,11 +3,10 @@ import { useEffect, useState } from 'react';
 import { ClientTable, type TableColumn } from '@douglasneuroinformatics/ui';
 import { useTranslation } from 'react-i18next';
 
+import { Filter } from '../components/Filter';
 import { FilterDropdown } from '../components/FilterDropdown';
-// eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
-type DataRecord = {
-  [key: string]: string | null;
-};
+
+type DataRecord = Record<string, string | null>;
 
 type TableData = {
   data: DataRecord[];
@@ -43,6 +42,18 @@ export const DataPage = () => {
     setSelectedColumns(Object.keys(data[0]));
   };
 
+  /** Return all of the unique values for a column name in the data */
+  const getUniqueValues = (records: DataRecord[], key: string) => {
+    const uniqueValues: string[] = [];
+    for (const record of records) {
+      const value = record[key]!;
+      if (!uniqueValues.includes(value)) {
+        uniqueValues.push(value);
+      }
+    }
+    return uniqueValues;
+  };
+
   useEffect(() => {
     void fetchData();
   }, []);
@@ -74,15 +85,25 @@ export const DataPage = () => {
   return (
     <div>
       <h1 className="text-4xl text-center my-8">{t('title')}</h1>
-      <div>
-        <FilterDropdown
-          options={raw.columns.map(({ field }) => field as string)}
-          title="Filters"
-          onChange={setSelectedColumns}
-        />
-      </div>
-      <div className="max-w-7xl mx-auto">
-        <ClientTable {...filtered} />
+      <div className="grid grid-cols-4 gap-8 p-3 border bg-slate-50 dark:border-slate-800 shadow">
+        <div className="col-span-1">
+          <h3 className="text-lg font-bold text-center">Filters</h3>
+          <hr className="my-2" />
+          {selectedColumns.map((colName) => {
+            const uniqueValues = getUniqueValues(filtered.data, colName);
+            return <Filter key={colName} label={colName} options={uniqueValues} />;
+          })}
+        </div>
+        <div className="col-span-3">
+          <FilterDropdown
+            options={raw.columns.map(({ field }) => field as string)}
+            title="Columns"
+            onChange={setSelectedColumns}
+          />
+          <div className="mt-3">
+            <ClientTable {...filtered} />
+          </div>
+        </div>
       </div>
     </div>
   );
