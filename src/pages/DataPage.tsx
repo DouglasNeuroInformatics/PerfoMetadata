@@ -13,6 +13,18 @@ type TableData = {
   columns: TableColumn<DataRecord>[];
 };
 
+/** Return all of the unique values for a column name in the data */
+const getUniqueValues = (records: DataRecord[], key: string) => {
+  const uniqueValues: string[] = [];
+  for (const record of records) {
+    const value = record[key]!;
+    if (!uniqueValues.includes(value)) {
+      uniqueValues.push(value);
+    }
+  }
+  return uniqueValues;
+};
+
 export const DataPage = () => {
   const [raw, setRaw] = useState<TableData>();
   const [filtered, setFiltered] = useState<TableData>();
@@ -32,26 +44,16 @@ export const DataPage = () => {
       return;
     }
 
-    const columns: TableColumn<DataRecord>[] = Object.keys(data[0]).map((columnName) => ({
+    const colNames = Object.keys(data[0]);
+
+    const columns: TableColumn<DataRecord>[] = colNames.map((columnName) => ({
       label: columnName,
       field: columnName
     }));
 
     setRaw({ columns, data });
     setFiltered({ columns, data });
-    setSelectedColumns(Object.keys(data[0]));
-  };
-
-  /** Return all of the unique values for a column name in the data */
-  const getUniqueValues = (records: DataRecord[], key: string) => {
-    const uniqueValues: string[] = [];
-    for (const record of records) {
-      const value = record[key]!;
-      if (!uniqueValues.includes(value)) {
-        uniqueValues.push(value);
-      }
-    }
-    return uniqueValues;
+    setSelectedColumns(colNames);
   };
 
   useEffect(() => {

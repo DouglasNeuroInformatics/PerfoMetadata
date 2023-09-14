@@ -12,9 +12,9 @@ export const Filter = ({ label, options }: FilterProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="my-3 border">
+    <div className="border flex flex-col justify-center">
       <button
-        className="font-semibold flex text-sm items-center p-1 w-full"
+        className="font-semibold flex text-sm items-center py-2 px-1 w-full"
         onClick={() => {
           setIsOpen(!isOpen);
         }}
@@ -22,9 +22,9 @@ export const Filter = ({ label, options }: FilterProps) => {
         <span className="mr-2">{label}</span>
         <ChevronDownIcon height={16} width={16} />
       </button>
-      <div className={clsx('overflow-hidden flex flex-col gap-2 p-1', isOpen ? 'h-auto' : 'h-0')}>
+      <div className={clsx('overflow-hidden flex flex-col gap-2', isOpen ? 'h-auto' : 'h-0')}>
         {options.map((option) => (
-          <div className="text-sm" key={option}>
+          <div className="text-sm p-1" key={option}>
             <button className="flex items-center justify-between w-full gap-2">
               <div className="text-left">
                 <span>{option}</span>
