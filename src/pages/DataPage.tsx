@@ -1,58 +1,73 @@
 import { useEffect, useState } from 'react';
 
-import { LanguageToggle, Table, type TableColumn } from '@douglasneuroinformatics/ui';
+import { Button, ClientTable, type TableColumn } from '@douglasneuroinformatics/ui';
 import { useTranslation } from 'react-i18next';
 
-import { Button } from '../components/Button';
+import { FilterDropdown } from '../components/FilterDropdown';
 
 // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
 type DataRecord = {
   [key: string]: string | null;
 };
 
+type TableData = {
+  data: DataRecord[];
+  columns: TableColumn<DataRecord>[];
+  // array of the field names that are selected
+  selectedColumns: string[];
+};
+
 export const DataPage = () => {
-  const [count, setCount] = useState(0);
-  const [data, setData] = useState<DataRecord[]>([]);
+  const [table, setTable] = useState<TableData>();
   const { t } = useTranslation();
-  async function fetchData() {
+
+  const fetchData = async () => {
     const response = await fetch('/data.json');
     if (!response.ok) {
       console.error('Error: status code ' + response.status);
       return;
     }
-    const jsonData = (await response.json()) as DataRecord[];
-    setCount(count + 1);
-    setData(jsonData);
-  }
+    const data = (await response.json()) as DataRecord[];
+
+    if (!data[0]) {
+      return;
+    }
+
+    const columns: TableColumn<DataRecord>[] = Object.keys(data[0]).map((columnName) => ({
+      label: columnName,
+      field: columnName
+    }));
+
+    setTable({ columns, data, selectedColumns: Object.keys(data[0]) });
+  };
 
   useEffect(() => {
-    setTimeout(() => {
-      void fetchData();
-    }, 2000);
+    void fetchData();
   }, []);
-
-  if (data.length === 0) {
-    return <p>Loading...</p>;
+  
+  if (!table) {
+    return null;
   }
-
-  const columns: TableColumn<DataRecord>[] = Object.keys(data[0]!).map((columnName) => ({
-    label: columnName,
-    field: columnName
-  }));
 
   return (
     <div>
-      <h1>{t('title')}</h1>
-      <LanguageToggle options={['en', 'fr']} />
-      <Table columns={columns} data={data} />
-      <p>The count is {count}</p>
-      <Button
-        onClick={() => {
-          void fetchData();
-        }}
-      >
-        Fetch Data
-      </Button>
+      <h1 className="text-4xl text-center my-8">{t('title')}</h1>
+      <div>
+        <FilterDropdown
+          options={table.columns.map(({ field }) => field as string)}
+          title="Filters"
+          onChange={(selectedColumns) => {
+            setTable((prevTable) => {
+              prevTable!.selectedColumns = selectedColumns;
+              console.log(prevTable);
+              return prevTable;
+            });
+          }}
+        />
+      </div>
+      <div className="max-w-7xl mx-auto">
+        <ClientTable {...table} />
+      </div>
     </div>
   );
 };
