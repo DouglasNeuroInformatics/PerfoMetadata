@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
 
-import { Button, ClientTable, type TableColumn } from '@douglasneuroinformatics/ui';
+import { ClientTable, type TableColumn } from '@douglasneuroinformatics/ui';
 import { useTranslation } from 'react-i18next';
 
 import { FilterDropdown } from '../components/FilterDropdown';
-
 // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
 type DataRecord = {
   [key: string]: string | null;
@@ -13,12 +12,13 @@ type DataRecord = {
 type TableData = {
   data: DataRecord[];
   columns: TableColumn<DataRecord>[];
-  // array of the field names that are selected
-  selectedColumns: string[];
 };
 
 export const DataPage = () => {
-  const [table, setTable] = useState<TableData>();
+  const [raw, setRaw] = useState<TableData>();
+  const [filtered, setFiltered] = useState<TableData>();
+  const [selectedColumns, setSelectedColumns] = useState<string[]>([]);
+
   const { t } = useTranslation();
 
   const fetchData = async () => {
@@ -38,15 +38,37 @@ export const DataPage = () => {
       field: columnName
     }));
 
-    setTable({ columns, data, selectedColumns: Object.keys(data[0]) });
+    setRaw({ columns, data });
+    setFiltered({ columns, data });
+    setSelectedColumns(Object.keys(data[0]));
   };
 
   useEffect(() => {
     void fetchData();
   }, []);
-  
-  if (!table) {
+
+  useEffect(() => {
+    if (!raw || selectedColumns.length === 0) {
+      return;
+    }
+    setFiltered({
+      columns: raw.columns.filter((col) => selectedColumns.includes(col.field as string)),
+      data: raw.data.map((record) => {
+        const filteredRecord: DataRecord = {};
+        for (const key in record) {
+          if (selectedColumns.includes(key)) {
+            filteredRecord[key] = record[key]!;
+          }
+        }
+        return filteredRecord;
+      })
+    });
+  }, [selectedColumns]);
+
+  if (!raw) {
     return null;
+  } else if (!filtered) {
+    return <p>Error</p>;
   }
 
   return (
@@ -54,19 +76,13 @@ export const DataPage = () => {
       <h1 className="text-4xl text-center my-8">{t('title')}</h1>
       <div>
         <FilterDropdown
-          options={table.columns.map(({ field }) => field as string)}
+          options={raw.columns.map(({ field }) => field as string)}
           title="Filters"
-          onChange={(selectedColumns) => {
-            setTable((prevTable) => {
-              prevTable!.selectedColumns = selectedColumns;
-              console.log(prevTable);
-              return prevTable;
-            });
-          }}
+          onChange={setSelectedColumns}
         />
       </div>
       <div className="max-w-7xl mx-auto">
-        <ClientTable {...table} />
+        <ClientTable {...filtered} />
       </div>
     </div>
   );
