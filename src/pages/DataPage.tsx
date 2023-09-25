@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { ClientTable, type TableColumn } from '@douglasneuroinformatics/ui';
+import { ClientTable, TableProps, type TableColumn, TableEntry } from '@douglasneuroinformatics/ui';
 import { useTranslation } from 'react-i18next';
 
 import { Filter } from '../components/Filter';
@@ -12,6 +12,15 @@ type TableData = {
   data: DataRecord[];
   columns: TableColumn<DataRecord>[];
 };
+
+/** IMPORTANT -- If you are learning React please know this is horrible practice. DO NOT REPEAT */
+function TableWrapper<T extends TableEntry>(props: TableProps<T>) {
+  useEffect(() => {
+    const table = document.querySelector('table');
+    table?.parentElement?.classList.remove('scrollbar-none');
+  }, []);
+  return <ClientTable {...props} />;
+}
 
 /** Return all of the unique values for a column name in the data */
 const getUniqueValues = (records: DataRecord[], key: string) => {
@@ -107,7 +116,7 @@ export const DataPage = () => {
         </div>
         <div className="col-span-4 md:col-span-3">
           <div className="mt-3">
-            <ClientTable {...filtered} />
+            <TableWrapper {...filtered} />
           </div>
         </div>
       </div>

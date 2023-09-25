@@ -22,7 +22,7 @@ export const Filter = ({ label, options }: FilterProps) => {
         <span className="mr-2">{label}</span>
         <ChevronDownIcon height={16} width={16} />
       </button>
-      <motion.div className='overflow-hidden flex flex-col gap-2' animate={{ height: isOpen ? 'auto': 0 }}>
+      <motion.div className='overflow-hidden flex flex-col h-0 gap-2' animate={{ height: isOpen === true ? 'auto': 0 }}>
         {options.map((option) => (
           <div className="text-sm p-1.5" key={option}>
             <button className="flex items-center justify-between w-full gap-2">
