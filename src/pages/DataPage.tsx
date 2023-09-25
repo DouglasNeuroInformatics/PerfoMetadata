@@ -95,7 +95,7 @@ export const DataPage = () => {
             onChange={setSelectedColumns}
           />
           <h3 className="my-3 font-semibold">{t('filters')}</h3>
-          <hr className="my-2" />
+          <div className="my-2 bg-slate-300 dark:bg-slate-600 w-full" style={{ height: '1px' }} />
           {selectedColumns.map((colName) => {
             const uniqueValues = getUniqueValues(filtered.data, colName);
             return (
