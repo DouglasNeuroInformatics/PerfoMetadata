@@ -7,7 +7,7 @@ import { NotFoundPage } from './pages/NotFoundPage';
 
 export const Router = () => {
   return (
-    <BrowserRouter basename="PerfoMetadata">
+    <BrowserRouter>
       <Routes>
         <Route element={<Layout />}>
           <Route index element={<IndexPage />} />
