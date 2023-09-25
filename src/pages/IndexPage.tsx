@@ -18,20 +18,19 @@ export const IndexPage = () => {
             transition={{ duration: 0.7 }}
           >
             <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 md:text-4xl lg:text-5xl">
-              {t('Perfocentre Metadata')}
+              {t('heroTitle')}
             </h1>
             <p className="mx-auto mt-3 w-11/12 text-base text-slate-600 dark:text-slate-300 md:mt-5 md:text-lg xl:mx-0">
-              {t('Discoverability platform of Perfocentre metadata for research purpose')}
+              {t('heroContent')}
             </p>
             <div className="mt-5 flex justify-center gap-3 xl:justify-start">
               <Button
-                label={t('Acces Metadata')}
+                label={t('accessMetadata')}
                 type="button"
                 onClick={() => {
                   return;
                 }}
               />
-              <Button label={t('learnMore')} type="button" variant="secondary" />
             </div>
           </motion.div>
           <motion.div
