@@ -1,6 +1,9 @@
 {
   "title": "Dictionnaire des données",
+  "platformTitle": "Métadonnées de Perfocentre",
   "heroTitle": "Métadonnées de Perfocentre",
   "heroContent": "Une plateforme de découverte pour consulter les métadonnées de Perfocentre à des fins de recherche",
-  "accessMetadata": "Accéder aux métadonnées"
+  "accessMetadata": "Accéder aux métadonnées",
+  "home": "Accueil",
+  "data": "Données"
 }

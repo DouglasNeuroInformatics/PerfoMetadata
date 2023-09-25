@@ -1,6 +1,7 @@
 export const HeroIcon = () => {
   return (
     <svg
+      className="w-96 h-auto"
       data-name="Layer 1"
       height="306"
       viewBox="0 0 158.81 130.19"
