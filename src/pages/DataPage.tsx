@@ -85,23 +85,27 @@ export const DataPage = () => {
   }
 
   return (
-    <div>
-      <h1 className="text-4xl text-center my-8">{t('title')}</h1>
-      <div className="grid grid-cols-4 gap-8 p-3 border bg-slate-50 dark:border-slate-800 shadow">
-        <div className="col-span-1">
-          <h3 className="text-lg font-bold text-center">Filters</h3>
+    <div className="flex flex-col flex-grow">
+      <h1 className="text-3xl font-semibold mt-8 text-center">{t('dataDict')}</h1>
+      <div className="grid grid-cols-4 gap-8 p-3 my-8 border bg-slate-50 dark:bg-slate-800 dark:border-slate-800 shadow">
+        <div className="col-span-4 md:col-span-1">
+          <FilterDropdown
+            options={raw.columns.map(({ field }) => field as string)}
+            title={t('columns')}
+            onChange={setSelectedColumns}
+          />
+          <h3 className="my-3 font-semibold">{t('filters')}</h3>
           <hr className="my-2" />
           {selectedColumns.map((colName) => {
             const uniqueValues = getUniqueValues(filtered.data, colName);
-            return <Filter key={colName} label={colName} options={uniqueValues} />;
+            return (
+              <div className="py-1" key={colName}>
+                <Filter label={colName} options={uniqueValues} />
+              </div>
+            );
           })}
         </div>
-        <div className="col-span-3">
-          <FilterDropdown
-            options={raw.columns.map(({ field }) => field as string)}
-            title="Columns"
-            onChange={setSelectedColumns}
-          />
+        <div className="col-span-4 md:col-span-3">
           <div className="mt-3">
             <ClientTable {...filtered} />
           </div>

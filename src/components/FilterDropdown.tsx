@@ -25,6 +25,7 @@ export const FilterDropdown = ({ options, title, onChange }: FilterDropdownProps
         icon={<ChevronDownIcon />}
         iconPosition="right"
         label={title}
+        variant="secondary"
       />
       <Transition
         as="div"

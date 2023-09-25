@@ -1,9 +1,11 @@
 {
-  "title": "Data Dictionary",
   "platformTitle": "Perfocentre Metadata",
   "heroTitle": "Perfocentre Metadata",
   "heroContent": "A discoverability platform for viewing Perfocentre metadata for research purposes",
   "accessMetadata": "Access Metadata",
   "home": "Home",
-  "data": "Data"
+  "data": "Data",
+  "dataDict": "Data Dictionary",
+  "filters": "Filters",
+  "columns": "Columns"
 }
