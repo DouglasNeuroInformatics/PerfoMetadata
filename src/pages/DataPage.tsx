@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { ClientTable, TableProps, type TableColumn, TableEntry } from '@douglasneuroinformatics/ui';
+import { ClientTable, Table, TableProps, type TableColumn, TableEntry } from '@douglasneuroinformatics/ui';
 import { useTranslation } from 'react-i18next';
 
 import { Filter } from '../components/Filter';
@@ -19,7 +19,9 @@ function TableWrapper<T extends TableEntry>(props: TableProps<T>) {
     const table = document.querySelector('table');
     table?.parentElement?.classList.remove('scrollbar-none');
   }, []);
-  return <ClientTable {...props} />;
+  return (
+  <Table {...props} />
+  );
 }
 
 /** Return all of the unique values for a column name in the data */
@@ -94,10 +96,10 @@ export const DataPage = () => {
   }
 
   return (
-    <div className="flex flex-col flex-grow">
+    <div className="flex flex-col h-[calc(100vh-64px)]">
       <h1 className="text-3xl font-semibold mt-8 text-center">{t('dataDict')}</h1>
-      <div className="grid grid-cols-4 gap-8 p-3 my-8 border bg-slate-50 dark:bg-slate-800 dark:border-slate-800 shadow">
-        <div className="col-span-4 md:col-span-1">
+      <div className="grid flex-grow overflow-hidden h-full grid-cols-4 gap-8 p-3 my-8 border bg-slate-50 dark:bg-slate-800 dark:border-slate-800 shadow">
+        <div className="col-span-4 md:col-span-1 overflow-y-scroll">
           <FilterDropdown
             options={raw.columns.map(({ field }) => field as string)}
             title={t('columns')}
@@ -114,8 +116,8 @@ export const DataPage = () => {
             );
           })}
         </div>
-        <div className="col-span-4 md:col-span-3">
-          <div className="mt-3">
+        <div className="col-span-4 overflow-y-scroll md:col-span-3 h-full">
+          <div className="mt-3 h-full">
             <TableWrapper {...filtered} />
           </div>
         </div>
